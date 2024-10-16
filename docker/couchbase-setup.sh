@@ -25,4 +25,4 @@ curl -X POST http://$CB_HOST:8091/pools/default/buckets/quiz/scopes/quiz/collect
   -u $CB_USERNAME:$CB_PASSWORD \
   -d name=cache-collection
 
-echo "Bucket, scope ve collection oluşturuldu!"
+echo "Bucket, scope ve collection created!"
