@@ -1,0 +1,60 @@
+version: '2'
+
+services:
+  quiz-app:
+    image: openjdk:21-jdk
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../target/quiz-app.jar:/quiz-app.jar
+    command: ["java", "-jar", "/quiz-app.jar"]
+    depends_on:
+      - couchbase
+      - postgre
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgre:5432/quiz
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      COUCHBASE_PROPERTIES_USERNAME: admin
+      COUCHBASE_PROPERTIES_PASSWORD: password
+      COUCHBASE_PROPERTIES_CONNECTION-STRING: couchbase://couchbase
+    networks:
+      - app-net
+
+  postgre:
+    container_name: quiz
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=quiz
+    ports:
+      - '5999:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ../docker:/docker-entrypoint-initdb.d/
+    networks:
+      - app-net
+
+  couchbase:
+    image: couchbase:7.2.0
+    container_name: couchbase
+    environment:
+      - COUCHBASE_ADMINISTRATOR_USERNAME=admin
+      - COUCHBASE_ADMINISTRATOR_PASSWORD=password
+    ports:
+      - "8091-8096:8091-8096"
+      - "11210:11210"
+    volumes:
+      - couchbase_data:/opt/couchbase/var
+    networks:
+      - app-net
+
+volumes:
+  couchbase_data:
+  postgres_data:
+
+networks:
+  app-net:
+    driver: bridge
