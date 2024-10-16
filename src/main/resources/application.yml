@@ -1,0 +1,36 @@
+spring:
+  jpa:
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+      hibernate.default_batch_fetch_size: 1000
+      hibernate.default_schema: quiz
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    generate-ddl: true
+    database: POSTGRESQL
+    database-platform: postgres
+    audit:
+      enabled: true
+  datasource:
+    url: jdbc:postgresql://localhost:5999/quiz?useSSL=false&useUnicode=true&characterEncoding=utf-8
+    username: postgres
+    password: postgres
+
+security:
+  jpa:
+    audit:
+      enabled: true
+
+application:
+  audit:
+    user: quiz-admin
+
+couchbase:
+  properties:
+    username: admin
+    password: password
+    connection-string: couchbase://127.0.0.1
+    bucket-name: quiz
+    scope-name: quiz
+    cacheable-collection: cache-collection
